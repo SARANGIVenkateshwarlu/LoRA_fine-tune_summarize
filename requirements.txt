@@ -1,13 +1,27 @@
+# =====================================================
+# CORE SCIENTIFIC STACK (CPU-safe)
+# =====================================================
 numpy==1.26.4
 scipy==1.13.1
 pandas==2.2.2
 matplotlib==3.8.2
 scikit-learn==1.3.2
 
-torch==2.2.1
-torchvision==0.17.1
-torchaudio==2.2.1
+# =====================================================
+# PYTORCH + CUDA 12.1 (42-GPU CLUSTER)
+# =====================================================
+# ⚠️  REQUIRES: NVIDIA DRIVER >= 530.30.02 (Linux) / 531.19 (Windows)
+#     Check: nvidia-smi | grep "Driver Version"
+#     Install: https://www.nvidia.com/Download/index.aspx
+#torch==2.2.1+cu121                 , install in GPU environment with: in notbook.pynb/py  pip install torch==2.2.1+cu121 --index-url https://download.pytorch.org/whl/cu121
+#torchvision==0.17.1+cu121
+#torchaudio==2.2.1+cu121
+# Install command: 
+# pip install torch==2.2.1+cu121 torchvision==0.17.1+cu121 torchaudio==2.2.1+cu121 --index-url https://download.pytorch.org/whl/cu121
 
+# =====================================================
+# HUGGINGFACE ML STACK
+# =====================================================
 transformers==4.40.0
 datasets==2.19.0
 peft==0.10.0
@@ -17,5 +31,16 @@ rouge_score==0.1.2
 optuna==3.6.1
 optuna-integration==3.6.0
 
+# =====================================================
+# UTILITIES
+# =====================================================
 sentencepiece==0.2.0
 tqdm==4.67.1
+
+# =====================================================
+# GPU REQUIREMENTS SUMMARY
+# =====================================================
+# NVIDIA DRIVER: >= 530.30.02 (Linux) / >= 531.19 (Windows)
+# CUDA RUNTIME: 12.1 (included in torch+cu121 wheel)
+# GPU SUPPORT: 42x A100/H100/L40S/RTX 40xx (Compute Capability 8.0+)
+# Verify: nvidia-smi && python -c "import torch; print(torch.cuda.is_available())"
