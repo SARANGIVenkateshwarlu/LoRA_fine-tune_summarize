@@ -63,3 +63,75 @@ Using the FLAN‑T5 model from Hugging Face and the DialogSum dataset, the proje
     Business intelligence and reporting
 
 
+📊 ROUGE Metrics (Evaluation for Summarization)
+
+ROUGE = Recall‑Oriented Understudy for Gisting Evaluation
+It measures how much overlap exists between a generated summary and a reference (ground truth) summary.
+🔹 ROUGE‑1
+
+Definition:
+Measures overlap of unigrams (single words) between generated and reference summaries.
+
+Formula (Recall version):
+ROUGE-1=Number of overlapping unigramsTotal unigrams in reference
+ROUGE-1=Total unigrams in referenceNumber of overlapping unigrams​
+
+
+
+ROUGE‑2
+
+Definition:
+Measures overlap of bigrams (two consecutive words).
+
+Formula (Recall version):
+ROUGE-2=Number of overlapping bigramsTotal bigrams in reference
+ROUGE-2=Total bigrams in referenceNumber of overlapping bigrams​
+
+
+ROUGE‑L
+
+Definition:
+Based on Longest Common Subsequence (LCS) between generated and reference text.
+
+LCS = longest sequence of words appearing in both texts in the same order (not necessarily consecutive).
+
+Formula (Recall version):
+ROUGE-L=Length of LCSLength of reference
+ROUGE-L=Length of referenceLength of LCS​
+
+
+Intuition
+
+    BLEU asks:(Precision-Oriented)
+    “Did you generate exactly what I expected?”
+
+    ROUGE asks: (Recall-Oriented)
+    “Did you cover the important parts?”
+
+## FLAN-T5 247M base
+ FLAN‑T5 is an encoder–decoder (seq2seq) model 
+
+
+ ### Load Dataset and LLM
+ Dataset : dialuge summairize 
+
+Zero-Shot Baseline (Original FLAN-T5):
+
+
+Full Fine-Tuning (Reference Baseline):
+
+LoRa_optuna_optimizations
+
+LoRa_Optimizations: 
+
+
+Qualitative Evaluation (Human-Readable):
+
+
+
+Quantitative ROUGE Comparison:
+
+streamlit.py for inference 
+
+
+

@@ -4,6 +4,12 @@ Classic Streamlit App | output_merged/ folder
 Venkat Sarangi | Lightning.AI Project
 """
 
+import os
+os.environ["TORCH_CPP_LOG_LEVEL"] = "ERROR"
+
+import logging
+logging.getLogger("torch.distributed.elastic.multiprocessing.redirects").setLevel(logging.ERROR)
+
 import streamlit as st
 import torch
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
@@ -29,11 +35,11 @@ h2 {color: #ff7f0e;}
 </style>
 """, unsafe_allow_html=True)
 
-# Load model from output_merged/
+# Load model from /teamspace/uploads (merged weights)
 @st.cache_resource
 def load_model():
     try:
-        model_path = "./output_merged"  # Your merged weights folder
+        model_path = "/teamspace/uploads"  # Your merged weights folder model_path = "/teamspace/uploads" 
         
         tokenizer = AutoTokenizer.from_pretrained(model_path)
         if tokenizer.pad_token is None:
@@ -43,6 +49,7 @@ def load_model():
             model_path,
             torch_dtype=torch.float16,
             device_map="auto"
+            
         )
         model.eval()
         
@@ -50,7 +57,7 @@ def load_model():
         return model, tokenizer
     except Exception as e:
         st.error(f"❌ Model load error: {e}")
-        st.info("Make sure `./output_merged/` contains model files")
+        st.info("Make sure `./teamspace/uploads` contains model files")
         return None, None
 
 # ROUGE computation
@@ -106,6 +113,7 @@ with col1:
     
     max_length = st.slider("Max output length", 50, 200, 128)
     
+
     if st.button("**Generate Summary** 🚀", type="primary"):
         if prompt:
             # Generate
@@ -114,8 +122,8 @@ with col1:
                 return_tensors="pt",
                 truncation=True,
                 max_length=512
-            ).to(model.device)
-            
+            ).to("cpu")
+                        
             with torch.no_grad():
                 outputs = model.generate(
                     **inputs,
