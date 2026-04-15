@@ -1,6 +1,6 @@
-# **LoRA Fine-Tune Optimization: Dialogue Summarization with FLAN-T5-Base **
+# **LoRA Fine-Tune Optimization: Dialogue Summarization with FLAN-T5-Base**
 
-**Profile Description**: Production-grade **LoRA fine-tuning pipeline** for **FLAN-T5-Base (247M params)** on **DialogSum dataset**, achieving **ROUGE-1 ~41.8%** via **Optuna HPO**. Compares **zero-shot**, **full fine-tune (42% ROUGE-1)**, and **LoRA (30-41% ROUGE-1, 94% param efficiency)**. Runs on **Lightning.AI L40S/A40** with **PEFT**, **TRL Trainer**, **bf16**. Saves **merged model** (~500MB) + **LoRA adapter** (28MB) for deployment.[^1]
+**Profile Description**: Production-grade **LoRA fine-tuning pipeline** for **FLAN-T5-Base (247M params)** on **DialogSum dataset**, achieving **ROUGE-1 ~41.8%** via **Optuna HPO**. Compares **zero-shot**, **full fine-tune (42% ROUGE-1)**, and **LoRA (30-41% ROUGE-1, 94% param efficiency)**. Runs on **Lightning.AI L40S/A40** with **PEFT**, **TRL Trainer**, **bf16**. Saves **merged model** (~500MB) + **LoRA adapter** (28MB) for deployment.
 
 ## **1. Model Details**
 
@@ -8,7 +8,7 @@
 - **Architecture**: **FLAN-T5** (text-to-text framework, instruction-tuned for summarization/QA/classification)
 - **LoRA Config** (best trial): **r=128**, **alpha=64**, **dropout=0.034**, **target_modules=["q", "v"]** (attention projections)
 - **Param Efficiency**: **~0.5% trainable** (1.2M vs 247M full); merged model deployable as standard HF
-- **Hardware**: **Lightning.AI L40S (46GB)**, **CUDA 12.1**, **bf16** precision[^1]
+- **Hardware**: **Lightning.AI L40S (46GB)**, **CUDA 12.1**, **bf16** precision.
 
 
 --- 
@@ -29,7 +29,7 @@
 | :-- | :-- |
 | Tokenization | **FLAN-T5 tokenizer**, max_input=512, max_output=128 |
 | Padding/Truncation | Batched, PT tensors |
-| Prompt | "Summarize the following conversation." + dialogue [^1] |
+| Prompt | "Summarize the following conversation." + dialogue |
 
 
 ## **3. Training Methods**
@@ -51,7 +51,7 @@
     - **Hyperparams**: r∈, alpha∈, dropout∈[0.03-0.05], epochs∈[3-5], lr∈[5-7e-4], bs∈[^2][^3][^4]
     - **Best Config**: **r=128/alpha=64/dropout=0.034/lr=5.58e-4/epochs=3/bs=32/warmup=13.6%**
     - **Trainer**: **HF Trainer** + **EarlyStopping(patience=3)**, **eval_steps=10-100**, **max_steps=80-100/trial**
-- **Efficiency**: **~94% fewer params**, **2-3x faster** than full FT[^1]
+- **Efficiency**: **~94% fewer params**, **2-3x faster** than full FT
 
 ---
 ![LoRA Internal](asset/Lora.jpg)
@@ -81,7 +81,7 @@
     - **LoRA Adapter**: `.output/lorabestmodel/` (28MB adapter.safetensors)
     - **Merged Model**: `.output/outputmerged/` (~500MB, ZIP ready)
     - **Optuna Plots**: HTML visualizations (optimization_history.html)
-- **Deployment Ready**: Load via `PeftModel.from_pretrained()` or merged HF pipeline[^1]
+- **Deployment Ready**: Load via `PeftModel.from_pretrained()` or merged HF pipeline
 
 ---
 ![LoRA Optimization](asset/3_LoRa-Optimization.png)
@@ -93,7 +93,7 @@
 
 ## **6. Conclusions**
 
-**LoRA achieves 76% of full fine-tune ROUGE** with **99% param reduction**, ideal for **edge/production** on resource-constrained setups. **Optuna HPO** critical for SOTA ranks/lr. Next: **DPO/RLHF**, **longer epochs (500 steps)**, **multi-task** (QA + summary). **Reproducible** on **Lightning.AI**/**Colab Pro**.[^1]
+**LoRA achieves 76% of full fine-tune ROUGE** with **99% param reduction**, ideal for **edge/production** on resource-constrained setups. **Optuna HPO** critical for SOTA ranks/lr. Next: **DPO/RLHF**, **longer epochs (500 steps)**, **multi-task** (QA + summary). **Reproducible** on **Lightning.AI**/**Colab Pro**.
 
 **Run Time**: ~4hrs end-to-end. **License**: Apache 2.0. **Repo**: GitHub-ready with notebook + outputs.
 
